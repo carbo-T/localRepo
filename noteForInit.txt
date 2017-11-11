@@ -25,3 +25,8 @@ git add (can add many files and commit once)
 git commit -m "message"
 git status (if there's something hasn't been uploaded)
 git diff (details)
+git log (records to support rollback)
+git reset -hard HEAD^ (HEAD^ means rollback to the last version, HEAD^^ represent the last second)
+git reset id (use six hex number to implement forward or back version control)
+-----------------------------------------------------------------------------
+
