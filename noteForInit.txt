@@ -25,3 +25,5 @@ git add (can add many files and commit once)
 git commit -m "message"
 git status (if there's something hasn't been uploaded)
 git diff (details)
+git log (display list of modification)
+
