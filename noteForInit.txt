@@ -1,0 +1,20 @@
+linux:
+ls,ll	list
+cd change directory
+mkdir make directory
+touch create a file
+rm remove
+pwd display current directory
+whoami
+hostname
+ifconfig
+netstat
+man
+kill
+clear
+
+vim
+up,down,left,right: k,j,h,i
+i/esc: insert/escape insert
+wq,ZZ: write and quit
+r,t: read to and write from file
