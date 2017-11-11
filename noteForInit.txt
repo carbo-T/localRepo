@@ -18,3 +18,9 @@ up,down,left,right: k,j,h,i
 i/esc: insert/escape insert
 wq,ZZ: write and quit
 r,t: read to and write from file
+
+git:
+git init
+git add (can add many files and commit once)
+git commit -m "message"
+
