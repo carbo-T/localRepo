@@ -38,4 +38,10 @@ ssh-add ***/id_rsa
 ssh -T git@github.com (test)
 git remote add origin *****url*****
 git push -u orgin master
+**********************************************
+branch control
+git checkout -b branchName (create or override a branch)
+git checkout branchName (switch to a branch)
+git merge branchName (merge branch to current branch)
+git branch -d branchName (delete branch)
 
