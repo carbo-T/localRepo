@@ -33,4 +33,9 @@ git rm filename (remove file)
 -------------------------------------------------------------------------------
 remote control
 ssh-kegen -t ras -C "email@example.com"
+ssh-agent
+ssh-add ***/id_rsa
+ssh -T git@github.com (test)
+git remote add origin *****url*****
+git push -u orgin master
 
