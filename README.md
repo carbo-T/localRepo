@@ -1,3 +1,4 @@
 # localRepo
-local repository \n
+local repository 
+
 basic commands for linux, vi and git
