@@ -28,5 +28,9 @@ git diff (details)
 git log (records to support rollback)
 git reset -hard HEAD^ (HEAD^ means rollback to the last version, HEAD^^ represent the last second)
 git reset id (use six hex number to implement forward or back version control)
------------------------------------------------------------------------------
+git checkout -- filename (add file from repository to workspace)
+git rm filename (remove file)
+-------------------------------------------------------------------------------
+remote control
+ssh-kegen -t ras -C "email@example.com"
 
