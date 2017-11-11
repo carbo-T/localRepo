@@ -44,4 +44,11 @@ git checkout -b branchName (create or override a branch)
 git checkout branchName (switch to a branch)
 git merge branchName (merge branch to current branch)
 git branch -d branchName (delete branch)
+git branch (check current branch)
+**********************************************
+store scene
+git stash (store)
+git stash list (list)
+git stash apply/drop (apply or delete the scene)
+git stash pop (apply and delete)
 
