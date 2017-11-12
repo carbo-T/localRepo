@@ -53,7 +53,7 @@ add/del a branch
 	git branch -d branchName
 
 upload and download
-	git push remoteName remoteBranch
+	git push remoteName localBranch:remoteBranch
 	git pull remoteName remoteBranch
 
 merge a branch
