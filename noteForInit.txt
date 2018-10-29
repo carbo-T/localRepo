@@ -52,3 +52,21 @@ git stash list (list)
 git stash apply/drop (apply or delete the scene)
 git stash pop (apply and delete)
 
+***********************************************
+deploy shadowsocks and config
+apt install shadowsocks
+vi /etc/shadowsocks/config.json, edit ip and port(remoteIP:443, localIP:1080)
+sslocal/ssserver -c /etc/shadowsocks/config.json -d start/stop/restart
+
+apt install proxychains
+config proxychains DNS, IP and Port
+proxychains curl myip.ipip.net
+
+convert socks5 to http proxy
+apt install privoxy
+vi /etc/privoxy/config
+  forward-socks5 / 127.0.0.1:1080 .
+  listen-address  127.0.0.1:8010
+config firefox's proxy
+************************************************
+
