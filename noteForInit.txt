@@ -85,3 +85,9 @@ swapon /mnt/swap/swapadd
 swapoff -v /mnt/swap/swapadd
 # go to check if it works
 free -m
+***********************************************
+file tranfer
+# copy files over secure connection 
+scp -r -P port localfile.txt username@ip:remoteDir
+# safe file transfer with breakpoint resume
+rsync -e 'ssh -p port' --delete-before -r --progress localfile.txt username@ip:remoteDir
