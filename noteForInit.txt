@@ -69,4 +69,19 @@ vi /etc/privoxy/config
   listen-address  127.0.0.1:8010
 config firefox's proxy
 ************************************************
-
+create swap for linux, enlarge memory
+# check current mem usage
+free -h
+df -h
+# find a place to create the swap file, this cmd create the file called 'swapadd' in /
+# if:input place; of:output place; bs:block size; count:file total size (512M)
+dd if=/dev/zero of=/swapadd bs=1024 count=524288
+# move the file into mnt
+mkdir /mnt/swap/
+mv swapadd /mnt/swap/
+# create system swap and enable/disable it
+mkswap /mnt/swap/swapadd
+swapon /mnt/swap/swapadd
+swapoff -v /mnt/swap/swapadd
+# go to check if it works
+free -m
