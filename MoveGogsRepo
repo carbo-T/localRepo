@@ -1,0 +1,20 @@
+# assume we installed gogs based on docker,then let's get inside previous gogs container
+docker exec -it gogs bash
+
+# find executable file 'gogs', normally at /app/gogs/
+# use backup cmd, type --help to get options, make sure current user is git
+passwd git
+su - git
+/app/gogs/gogs backup 
+# then we will get a gogs-backup-xxxx.zip file for restoration
+
+# in order for moving the file to another terminal, we need to move the file out of docker first
+docker container ls
+docker cp containerID:src dest
+
+# use winscp,filezilla or other file transfer software to copy the backup file into our new terminal, into the very docker container
+# then run the cmd to restore, it's best to create a config file for the new gogs container, so that the restore process will work
+# without temp directory definition, invalid cross-device link error may occur
+ /app/gogs/gogs restore --config=/data/app.ini --tempdir=/data/tmp/ -v --from="/app/gogs/gogs-backup/gogs-backup-xxxx.zip"
+ 
+ 
