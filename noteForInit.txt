@@ -31,7 +31,7 @@ git reset id (use six hex number to implement forward or back version control)
 git checkout -- filename (add file from repository to workspace)
 git rm filename (remove file)
 -------------------------------------------------------------------------------
-remote control
+# remote control
 ssh-kegen -t ras -C "email@example.com"
 ssh-agent
 ssh-add ***/id_rsa
@@ -39,21 +39,21 @@ ssh -T git@github.com (test)
 git remote add origin *****url*****
 git push -u orgin master
 **********************************************
-branch control
+# branch control
 git checkout -b branchName (create or override a branch)
 git checkout branchName (switch to a branch)
 git merge branchName (merge branch to current branch)
 git branch -d branchName (delete branch)
 git branch (check current branch)
 **********************************************
-store scene
+# store scene
 git stash (store)
 git stash list (list)
 git stash apply/drop (apply or delete the scene)
 git stash pop (apply and delete)
 
 ***********************************************
-deploy shadowsocks and config
+# deploy shadowsocks and config
 apt install shadowsocks
 vi /etc/shadowsocks/config.json, edit ip and port(remoteIP:443, localIP:1080)
 sslocal/ssserver -c /etc/shadowsocks/config.json -d start/stop/restart
@@ -62,14 +62,14 @@ apt install proxychains
 config proxychains DNS, IP and Port
 proxychains curl myip.ipip.net
 
-convert socks5 to http proxy
+# convert socks5 to http proxy
 apt install privoxy
 vi /etc/privoxy/config
   forward-socks5 / 127.0.0.1:1080 .
   listen-address  127.0.0.1:8010
-config firefox's proxy
+# config firefox's proxy
 ************************************************
-create swap for linux, enlarge memory
+# create swap for linux, enlarge memory
 # check current mem usage
 free -h
 df -h
@@ -86,8 +86,26 @@ swapoff -v /mnt/swap/swapadd
 # go to check if it works
 free -m
 ***********************************************
-file tranfer
+# file tranfer
 # copy files over secure connection 
 scp -r -P port localfile.txt username@ip:remoteDir
 # safe file transfer with breakpoint resume
 rsync -e 'ssh -p port' --delete-before -r --progress localfile.txt username@ip:remoteDir
+***********************************************
+# register service in ubuntu
+# create myapp.service interface in /lib/systemd/system
+--------------myapp.service---------------
+[Unit]
+Description=tomcat control
+
+[Service]
+Type=forking
+ExecStart=/etc/init.d/tomcat start
+ExecStop=/etc/init.d/tomcat stop
+PrivateTmp=true
+------------------------------------------
+# then create the functional file in /etc/init.d as 'tomcat', detailed in anther file
+# finally reload units
+systemctl daemen-reload
+# and check the log to make sure it function well
+journalctl -xe
