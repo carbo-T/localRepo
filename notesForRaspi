@@ -1,0 +1,83 @@
+1. link raspi with Wifi
+# create a file called wpa_supplicant.conf, with content:
+-----------------------------
+country=CN
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+ 
+network={
+ssid="WifiName"
+psk="passwd"
+key_mgmt=WPA-PSK
+priority=1
+}
+-----------------------------
+be careful when defining more wifi hosts, as the system will connect wifi one by one based on the priority until it cannot find the next.
+
+2. open ssh permission and connect via VNC
+# create a file "ssh" in /boot, login to the system
+sudo apt-get update
+sudo apt-get install tightvncserver
+sudo raspi-config # open vnc function
+
+3. install wiringPi
+git clone git://git.drogon.net/wiringPi
+cd wiringPi
+git pull origin
+./build
+
+4. check gpio info
+gpio -v
+gpio readall
+
+5.infra-red control
+# install lirc
+sudo apt-get install lirc
+# modify config files
+a. sudo vi /etc/modules 
+-------------
+i2c-dev
+lirc_dev
+lirc_rpi gpio_in_pin=5 # gpio_out_pin=4
+-------------
+b. sudo vi /etc/lirc/lirc_options.conf
+-------------
+driver = default # from /etc/lirc/lircd.conf.d
+device = /dev/lirc0 # check whether this device exist first
+permission = 666
+-------------
+c. sudo vi /boot/config.txt
+-------------
+dtparam=i2c_arm=on
+dtoverlay=lirc-rpi:gpio_in_pin=5#,gpio_out_pin=4
+dtoverlay=w1-gpio # open universal serial bus, used by devices like 18B20
+enable_uart=1 # open series port
+-------------
+reboot
+# link infra-red receiver to pin 5 and check if the device is mounted properly
+ls /dev/li*
+irw # push buttons to see if there's any response in the termial
+sudo apt-get install liblircclient-dev # this lib is for c 
+sudo apt-get install python-pylirc # this lib is for python
+
+6.18B20 control
+# open universal serial bus by editting /boot/config.txt, then load modules
+sudo modprobe w1-gpio
+sudo modprobe w1-therm
+cd /sys/bus/w1/devices/
+ls # if a file named "28-..." exists, then the device loaded correctly
+cd 28-...
+cat w1_slave
+
+7.usb camera
+# refer to https://blog.csdn.net/yjp19871013/article/details/80147803
+# check devices
+lsusb
+ls /dev/video* # the device is mounted if a file exist
+# install fswebcam to capture image
+sudo apt-get install fswebcam
+fswebcam /dev/video0 ./img1.jpg
+# use luvcview to monitor in real-time
+sudo apt-get install luvcview
+luvcview -s 1080x720
+
