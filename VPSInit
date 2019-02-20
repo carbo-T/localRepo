@@ -4,7 +4,28 @@ apt-get isntall mysql-client
 sudo apt-get install libmysqlclient-dev
 
 # install docker
+  # new version(doesn't work for me)
+  sudo apt-get update
+  sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+  curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
+  sudo add-apt-repository "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable"
+  sudo apt-get -y update
+  sudo apt-get -y install docker-ce
+  ***err Writing more data than expected
+  # old version
+  apt-get update
+  apt-get install docker docker.io
 
 # install gogs
+apt-get install nginx
+apt-get install git
+docker pull gogs/gogs
+docker image list
+  # sudo docker run --name mysqlutf8 -p 3306:3306 -v /root/mysql/data/:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=yct -e MYSQL_USER=ubuntu -e MYSQL_PASSWORD=yct -d mysqlutf8:latest
+docker run --name=gogs -p 10080:3000 -p 10022:22 -v /root/gogs:/data gogs/gogs:latest
+docker start gogs
+visit http://url:10080 to setup gogs
 
 # install tomcat
+wget -c https://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-7/v7.0.92/bin/apache-tomcat-7.0.92.tar.gz
+register tomcat service
