@@ -110,3 +110,23 @@ PrivateTmp=true
 systemctl daemen-reload
 # and check the log to make sure it function well
 journalctl -xe
+***********************************************
+# ufw and iptables
+# check port status
+telnet the_ip 80
+sudo netstat -ntlup
+iptables -L -n
+# ufw manipulation
+sudo ufw status
+sudo ufw allow 80
+sudo ufw enable/reload
+# install and modify iptables
+sudo apt-get install iptables
+iptables -I INPUT -p tcp --dport 80:100 -j ACCEPT
+iptables -D INPUT 2
+iptables-save
+# iptables persistence, conf files located in /etc/iptables/
+sudo apt-get install iptables-persistent
+sudo netfilter-persistent save
+sudo netfilter-persistent reload
+
