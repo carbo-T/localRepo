@@ -130,3 +130,24 @@ sudo apt-get install iptables-persistent
 sudo netfilter-persistent save
 sudo netfilter-persistent reload
 
+***********************************************
+# install vncserver
+apt-get update 
+apt-get upgrade
+apt-get install vnc4server
+apt-get install xfce4
+vncserver :1
+vncserver -kill :1
+# modify configuration file in ~/.vnc/xtartup
+---------------xtartup-------------
+# x-window-manager &
+session-manager & xfdesktop & xfce4-panel &
+xfce4-menu-plugin &
+xfsettingsd &
+xfconfd &
+xfwm4 &
+---------------xtartup-------------
+# start vncserver
+vncserver :1
+# install vncviewer at local computer
+https://www.realvnc.com/en/connect/download/viewer/
