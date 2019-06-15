@@ -68,6 +68,12 @@ apt install privoxy
 vi /etc/privoxy/config
   forward-socks5 / 127.0.0.1:1080 .
   listen-address  127.0.0.1:8010
+sudo systemctl restart privoxy.serivce
+.bashrc -> export http_proxy=http://127.0.0.1:1080
+gedit /etc/enviroment
+unset  http_proxy 
+unset  https_proxy
+
 # config firefox's proxy
 ************************************************
 # create swap for linux, enlarge memory
