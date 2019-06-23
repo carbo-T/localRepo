@@ -81,3 +81,23 @@ fswebcam /dev/video0 ./img1.jpg
 sudo apt-get install luvcview
 luvcview -s 1080x720
 
+8.include adafruit pwm servo driver into ros node(python) and basic ros funcs
+# write our own node in python, with the first line:
+  #!/usr/bin/env python
+# otherwise we will get error like "from: can't read /var/mail/MODULENAME"
+# after that, we may get error "/usr/bin/env: ‘python\r’: No such file or directory", its because of the rule of EOL in win and unix
+# to solve it, we edit the script with vim and type ":set  ff=unix" and save.
+# basic subscriber and publisher created below:
+rospy.init_node('node_name', anonymous=True)
+pub = rospy.Publisher('topic', String, queue_size=10)
+pub.publish(hello_str)
+rate = rospy.Rate(10) # 10hz
+rate.sleep()
+rospy.loginfo("logs...")
+rospy.Subscriber("topic", String, callback)
+rospy.spin()
+
+9.cartographer and ros map
+rosservice call /finish_trajectory 0
+rosservice call /write_state "{filename: '${HOME}/Downloads/mymap.pbstream'}"
+rosrun cartographer_ros cartographer_pbstream_to_ros_map -map_filestem=${HOME}/Downloads/mymap -pbstream_filename=${HOME}/Downloads/mymap.pbstream -resolution=0.05
