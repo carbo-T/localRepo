@@ -1,0 +1,42 @@
+#include <pcl/point_types.h>
+#include <pcl/point_cloud.h>
+#include <pcl/common/transforms.h>
+#include <pcl/filters/voxel_grid.h>
+#include <pcl/filters/approximate_voxel_grid.h>
+#include <pcl/io/pcd_io.h>
+
+#include <pcl_conversions/pcl_conversions.h>
+#include <pcl_ros/point_cloud.h>
+
+//定义点
+pcl::PointXYZ minp = pcl::PointXYZ(-10.0, -10.0, 0);
+//定义点云
+pcl::PointCloud<pcl::PointXYZ> pc_origin_;
+//定义点云指针
+pcl::PointCloud<pcl::PointXYZ>::Ptr ori_ptr = pc_origin_.makeShared();
+pcl::PointCloud<pcl::PointXYZ>::Ptr ori_ptr (new pcl::PointCloud<pcl::PointXYZ>);
+
+//从PCD文件读取点云
+pcl::io::loadPCDFile<pcl::PointXYZ> ("room_scan1.pcd", *target_cloud)；
+//将点云保存为PCD文件
+pcl::io::savePCDFileASCII ("room_scan2_transformed.pcd", *output_cloud);
+//把点云转化为ros消息
+sensor_msgs::PointCloud2 output_origin;
+pcl::toROSMsg(pc_origin_, output_origin);
+//把ros消息转换成点云
+pcl::fromROSMsg(output_origin, pc_origin_);
+//转换点云，移动(1,2)并z轴右手旋转pi/2
+pcl::PointCloud<pcl::PointXYZ> curr1;
+Eigen::Affine3f transform_1 = Eigen::Affine3f::Identity();
+transform_1.translation() << 1.0, 2.0, 0.0;
+transform_1.rotate (Eigen::AngleAxisf (M_PI_2, Eigen::Vector3f::UnitZ()));
+pcl::transformPointCloud(pc_origin_, curr1, transform_1);
+//消除无效点
+std::vector<int> indices;
+pcl::removeNaNFromPointCloud(curr1, curr1, indices);
+
+//创建体素滤波器
+pcl::ApproximateVoxelGrid<pcl::PointXYZ> approximate_voxel_filter;
+approximate_voxel_filter.setLeafSize (0.05, 0.05, 0.05);
+approximate_voxel_filter.setInputCloud (ori_ptr);
+approximate_voxel_filter.filter (*ori_ptr);

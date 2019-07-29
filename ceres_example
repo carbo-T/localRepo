@@ -1,0 +1,85 @@
+#include <ceres/ceres.h>
+
+struct DIST_COST
+{
+  DIST_COST(std::vector<Eigen::Vector3d> pointSelected, std::vector<Eigen::Vector3d> pointTargetA, std::vector<Eigen::Vector3d> pointTargetB) : _pointSelected(pointSelected), _pointTargetA(pointTargetA), _pointTargetB(pointTargetB) {}
+  template <typename T>
+  bool operator()(const T *trans, T *residual) const
+  {
+    int count = _pointSelected.size();
+    for (size_t i = 0; i < count; i++)
+    {
+      //T s = T(10) * T(_pointSelected[i].intensity - int(_pointSelected[i].intensity));
+
+      //线性插值：根据每个点在点云中的相对位置关系，乘以相应的旋转平移系数
+      T rx = trans[0];
+      T ry = trans[1];
+      T rz = trans[2];
+      T tx = trans[3];
+      T ty = trans[4];
+      T tz = trans[5];
+
+      //平移后绕z轴旋转（-rz）
+      T x1 = cos(rz) * (T(_pointSelected[i].x()) - tx) + sin(rz) * (T(_pointSelected[i].y()) - ty);
+      T y1 = -sin(rz) * (T(_pointSelected[i].x()) - tx) + cos(rz) * (T(_pointSelected[i].y()) - ty);
+      T z1 = (T(_pointSelected[i].z()) - tz);
+
+      //绕x轴旋转（-rx）
+      T x2 = x1;
+      T y2 = cos(rx) * y1 + sin(rx) * z1;
+      T z2 = -sin(rx) * y1 + cos(rx) * z1;
+
+      Eigen::Matrix<T, 3, 1> O, OA, OB, AB;
+      //绕y轴旋转（-ry）
+      O(0,0) = cos(ry) * x2 - sin(ry) * z2;
+      O(1,0) = y2;
+      O(2,0) = sin(ry) * x2 + cos(ry) * z2;
+
+      OA(0,0) = T(_pointTargetA[i].x())-O(0,0);
+      OA(1,0) = T(_pointTargetA[i].y())-O(1,0);
+      OA(2,0) = T(_pointTargetA[i].z())-O(2,0);
+
+      OB(0, 0) = T(_pointTargetB[i].x())-O(0,0);
+      OB(1, 0) = T(_pointTargetB[i].y())-O(1,0);
+      OB(2, 0) = T(_pointTargetB[i].z())-O(2,0);
+
+      AB(0, 0) = T(_pointTargetB[i].x())-T(_pointTargetA[i].x());
+      AB(1, 0) = T(_pointTargetB[i].y())-T(_pointTargetA[i].y());
+      AB(2, 0) = T(_pointTargetB[i].z())-T(_pointTargetA[i].z());
+
+      Eigen::Matrix<T, 3, 1> OAxOB;
+      OAxOB(0,0) = OA(1,0)*OB(2,0)-OA(2,0)*OB(1,0);
+      OAxOB(1,0) = OA(2,0)*OB(0,0)-OA(0,0)*OB(2,0);
+      OAxOB(2,0) = OA(0,0)*OB(1,0)-OA(1,0)*OB(0,0);
+      T _OAxOB_ = ceres::sqrt(OAxOB(0,0)*OAxOB(0,0)+OAxOB(1,0)*OAxOB(1,0)+OAxOB(2,0)*OAxOB(2,0));
+      T _AB_ = ceres::sqrt(AB(0,0)*AB(0,0)+AB(1,0)*AB(1,0)+AB(2,0)*AB(2,0));
+      T dist = _OAxOB_ / _AB_;
+      T s1 = T(1) - T(1.8)*dist;
+      residual[i] = s1*dist;
+    }
+
+    return true;
+  }
+  std::vector<Eigen::Vector3d> _pointSelected;
+  std::vector<Eigen::Vector3d> _pointTargetA;
+  std::vector<Eigen::Vector3d> _pointTargetB;
+};
+
+double temp[6] = {0, 0, 0, 0, 0, 0};
+std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+ceres::Problem problem;
+problem.AddResidualBlock(
+    new ceres::AutoDiffCostFunction<DIST_COST, ceres::DYNAMIC, 6>(
+        new DIST_COST(pointSelected, pointTargetA, pointTargetB), pointSelected.size()),
+    nullptr,
+    temp);
+
+//配置求解器并求解，输出结果
+ceres::Solver::Options options;
+options.linear_solver_type = ceres::DENSE_QR;
+options.minimizer_progress_to_stdout = false;
+options.parameter_tolerance = 1e-6;
+options.function_tolerance = 1e-6;
+ceres::Solver::Summary summary;
+ceres::Solve(options, &problem, &summary);
+std::cout << summary.BriefReport() << std::endl;
