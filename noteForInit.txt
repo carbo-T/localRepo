@@ -157,3 +157,17 @@ xfwm4 &
 vncserver :1
 # install vncviewer at local computer
 https://www.realvnc.com/en/connect/download/viewer/
+
+************************************************
+change linux kernel
+download from url: https://mirror.bjtu.edu.cn/kernel/linux/kernel/v3.x/
+reference blog: https://blog.csdn.net/u010472607/article/details/79123495
+sudo apt-get install libncurses5-dev
+sudo apt-get install libssl-dev
+cp /boot/config-x.xx.xxxx-generic  下载的源码目录/.config
+make menuconfig
+[load]–>[OK]–>[Save]–>[OK]–>[EXIT]–>[EXIT]
+make bzImage -j6
+make modules -j6
+sudo make modules_install
+sudo make install
