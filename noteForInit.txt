@@ -167,7 +167,6 @@ sudo apt-get install libssl-dev
 cp /boot/config-x.xx.xxxx-generic  下载的源码目录/.config
 make menuconfig
 [load]–>[OK]–>[Save]–>[OK]–>[EXIT]–>[EXIT]
-make bzImage -j6
-make modules -j6
+make -j6
 sudo make modules_install
 sudo make install
