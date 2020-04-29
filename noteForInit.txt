@@ -45,6 +45,11 @@ git checkout branchName (switch to a branch)
 git merge branchName (merge branch to current branch)
 git branch -d branchName (delete branch)
 git branch (check current branch)
+--delete branch
+git branch -d local_branch
+git push origin --delete remote_branch
+--push to remote
+git push origin local_branch:remote_branch
 **********************************************
 # store scene
 git stash (store)
